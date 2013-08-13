@@ -35,3 +35,40 @@
 
 ;;;;;;;;;;;;;;; 1.2
 
+(/ (+ 4 5 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7)))
+
+;;;;;;;;;;;;;;; 1.3
+
+(define (square x) (* x x))
+
+(define (sum-of-squares x y) (+ (square x) (square y)))
+
+(define (sum-of-larger-square x y z)
+  (if (> x y)
+      (sum-of-squares x (if (> y z) y z))
+      (sum-of-squares y (if (> x z) x z))
+))
+
+;;;;;;;;;;;;;;;; 1.4
+
+;code:
+
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+
+;we use if to decide if we should add b (if it's positive) or subtract b (if it's negative) by using if to return an operator
+
+;;;;;;;;;;;;;;; 1.5
+
+;question code:
+
+(define (p) (p))
+
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+
+
+;If applicative order evaluation is used (where we evaluate the arguments and then apply) we will see an error related to infinite recursion since p calls p forever. If Normal order evaluation is used (fully expand then reduce) it will print zero
+
