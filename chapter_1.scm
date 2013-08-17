@@ -72,3 +72,68 @@
 
 ;If applicative order evaluation is used (where we evaluate the arguments and then apply) we will see an error related to infinite recursion since p calls p forever. If Normal order evaluation is used (fully expand then reduce) it will print zero
 
+;;;;;;;;; 1.6
+
+;code:
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+
+;;This results in a maxiumum recursion depth exceeded error because of the order of evaluation. Scheme will try to apply evaluate then and else clause leading to an infinite recursion.
+
+;;;;;;;;; 1.7
+
+;sample code:
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y
+  (/ (+ x y) 2))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+
+;;my code
+
+(define (square-iter2 current-guess last-guess x)
+  (if (good-enough2? current-guess last-guess)
+      current-guess
+      (square-iter2 (improve current-guess x) current-guess x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (good-enough2? current-guess last-guess)
+  (< (/ (abs (- current-guess last-guess)) current-guess)
+     (/ current-guess 1000)))
+
+(define (sqrt x)
+  (square-iter2 1.0 0.0 x))
+
+
+;1.8
+
+(define (cube-iter current-guess last-guess x)
+  (if (good-enough2? current-guess last-guess)
+      current-guess
+      (cube-iter (cube-improve current-guess x) current-guess x)))
+
+(define (cube-improve x y)
+  (/ (+ (/ x (* y y)) (* 2 y)) 3))
+
+(define (cube x)
+  (cube-iter 1.0 2.0 x))
+
