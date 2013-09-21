@@ -137,3 +137,44 @@
 (define (cube x)
   (cube-iter 1.0 2.0 x))
 
+;1.10
+
+;;code
+
+(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1)
+                 (A x (- y 1))))))
+
+;1.11
+
+;; recursive
+
+(define (f n)
+  (cond ((< n 3) n)
+	(else (+
+	       (f (- n 1))
+	       (* 2 (f (- n 2)))
+	       (* 3 (f (- n 3)))
+	       ))))
+
+;; iterative
+
+(define (f-iter n x a b c)
+  (cond ((< n 3) n)
+	((= n x) a)
+	(else (f-iter n (+ x 1) (+ a (* 2 b) (* 3 c)) a b))))
+
+(define (f2 n)
+  (f-iter n 2 2 1 0))
+
+;1.12 pascal's triangle
+
+(define (pascal x y)
+  (cond	((= x 0) 0)
+	((= x 1) 1)
+	((> x y) 0)
+	(else (+ (pascal x (- y 1)) (pascal (- x 1) (- y 1))))))
+
