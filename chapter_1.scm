@@ -191,4 +191,39 @@
 (define (fast-exp b n)
   (exp-iter b n 1))
 
-;;M-x run scheme; C-x C-e to send current line to schemeo
+;1.17 iterative fast multiplication
+
+(define (double x) (+ x x))
+(define (halve x) (/ x 2))
+
+(define (multip-iter a b c)
+  (cond ((= a 0) c)
+	(else (multip-iter (- a 1) b (+ c b)))))
+
+(define (multip a b)
+  (multip-iter a b 0))
+
+(define (fast-multip a b)
+  (cond ((= a 1) b)
+	((even? a) (fast-multip (halve a) (double b)))
+	(else (+ b (fast-multip (- a 1) b)))))
+
+;1.19
+
+(define (fib n)
+  (fib-iter 1 0 0 1 n))
+
+(define (fib-iter a b p q count)
+  (cond ((= count 0) b)
+	((even? count)
+	(fib-iter
+	 a
+	 b
+	 (+ (* q q) (* p p))
+	 (+ (* 2 p q) (* q q))
+	 (/ count 2)))
+  (else (fib-iter (+ (* b q) (* a q) (* a p))
+		  (+ (* b p) (* a q))
+		  p
+		  q
+		  (- count 1)))))
