@@ -191,7 +191,7 @@
 (define (fast-exp b n)
   (exp-iter b n 1))
 
-;1.17 iterative fast multiplication
+					;1.17 iterative fast multiplication
 
 (define (double x) (+ x x))
 (define (halve x) (/ x 2))
@@ -244,3 +244,55 @@
 (smallest-divisor 199) ;value 199
 (smallest-divisor 1999) ;value 1999
 (smallest-divisor 199) ;value 7
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+;1.22
+
+(define (timed-prime-test n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime n (- (runtime) start-time))))
+
+(define (report-prime n elapsed-time)
+  (newline)
+  (display n)
+  (display " *** ")
+  (display elapsed-time))
+
+(define (search-for-primes start end)
+  (if (<= start end) (timed-prime-test start))
+  (if (<= start end)
+      (cond ((= (remainder start 2) 0)
+	    (search-for-primes (+ 1 start) end))
+	    (else (search-for-primes (+ start 2) end)))))
+
+(search-for-primes 1000 1100)
+;1009
+;1013
+;1019
+
+(search-for-primes 10000 10100)
+;10007
+;10009
+;10037
+
+(search-for-primes 100000 100100)
+;100003
+;100019
+;100043
+
+(search-for-primes 1000000 1000100)
+;1000003
+;1000033
+;1000037
+
+(search-for-primes 100000000 100000100)
+
+(search-for-primes 1000000000 1000000100)
+
+(search-for-primes 10000000000 10000000100)
+
