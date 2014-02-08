@@ -291,8 +291,74 @@
 ;1000037
 
 (search-for-primes 100000000 100000100)
+;100000007 *** .01999999999999999
+;100000037 *** 2.0000000000000018e-2
+;100000039 *** 9.999999999999981e-3
+;100000049 *** 2.0000000000000018e-2
+;100000073 *** 2.0000000000000018e-2
+;100000081 *** 9.999999999999953e-3
 
 (search-for-primes 1000000000 1000000100)
+;1000000007 *** 5.0000000000000044e-2
+;1000000009 *** .04999999999999982
+;1000000021 *** 5.0000000000000044e-2
+;1000000033 *** .06000000000000005
+;1000000087 *** .04999999999999982
+;1000000093 *** 5.0000000000000044e-2
+;1000000097 *** 5.0000000000000044e-2
 
 (search-for-primes 10000000000 10000000100)
+;10000000019 *** .16000000000000014
+;10000000033 *** .16000000000000014
+;10000000061 *** .1599999999999997
+;10000000069 *** .16000000000000014
+;10000000097 *** .16000000000000014
 
+;1.23
+
+(define (next n)
+  (cond ((= n 2) 3)
+	(else (+ 2 n))))
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+	((divides? test-divisor n) test-divisor)
+	(else (find-divisor n (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(define (timed-prime-test n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime n (- (runtime) start-time))))
+
+(define (report-prime n elapsed-time)
+  (newline)
+  (display n)
+  (display " *** ")
+  (display elapsed-time))
+
+(define (search-for-primes start end)
+  (if (<= start end) (timed-prime-test start))
+  (if (<= start end)
+      (cond ((= (remainder start 2) 0)
+	    (search-for-primes (+ 1 start) end))
+	    (else (search-for-primes (+ start 2) end)))))
+
+(search-for-primes 10000000000 10000000100)
+;10000000019 *** .0900000000000003
+;10000000033 *** .09999999999999964
+;10000000061 *** .0900000000000003
+;10000000069 *** .10000000000000009
+;10000000097 *** .10000000000000009
+
+;this test should be twice as fast since half as many values are checked now, but it is only 1.6 times faster. It's possible that the extra if is introducing another instruciton per check
