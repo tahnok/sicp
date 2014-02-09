@@ -362,3 +362,58 @@
 ;10000000097 *** .10000000000000009
 
 ;this test should be twice as fast since half as many values are checked now, but it is only 1.6 times faster. It's possible that the extra if is introducing another instruciton per check
+
+;1.24
+
+(define (square x) (* x x))
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+	((even? exp)
+	 (remainder (square (expmod base (/ exp 2) m))
+		    m))
+	(else
+	 (remainder (* base (expmod base (- exp 1) m))
+		    m))))
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? np times)
+  (cond ((= times 0) true)
+	((fermat-test n) (fast-prime? n (- times 1)))
+	(else false)))
+
+(define (timed-prime-test n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (fast-prime? n 100)
+      (report-prime n (- (runtime) start-time))))
+
+(define (report-prime n elapsed-time)
+  (newline)
+  (display n)
+  (display " *** ")
+  (display elapsed-time))
+
+(define (search-for-primes start end)
+  (if (<= start end) (timed-prime-test start))
+  (if (<= start end)
+      (cond ((= (remainder start 2) 0)
+	    (search-for-primes (+ 1 start) end))
+	    (else (search-for-primes (+ start 2) end)))))
+
+(search-for-primes 10000000000 10000000100)
+;10000000019 *** 1.0000000000000009e-2
+;10000000033 *** 1.9999999999999962e-2
+;10000000061 *** 1.0000000000000009e-2
+;10000000069 *** 1.0000000000000009e-2
+;10000000097 *** 1.0000000000000009e-2
+
+(search-for-primes 100000000000 100000000100)
+(search-for-primes 1000000000000 1000000000100)
+(search-for-primes 10000000000000 10000000000100)
+(search-for-primes 100000000000000 100000000000100)
