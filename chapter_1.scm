@@ -420,3 +420,6 @@
 
 ;1.25
 ;She is technically correct, but this solution will computer very large numbers and result in much slower run times
+
+;1.26
+;The intrerpreter will evalutate (remainder (* (expmod base (/exp 2) m) (expmod base (/ exp 2) m)) m) such that expmod is called twice instead of just once and then doubling the result. But since this is a recursive procedure, we go into tree recursion calling twice the expmod at every level
