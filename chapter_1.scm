@@ -417,3 +417,6 @@
 (search-for-primes 1000000000000 1000000000100)
 (search-for-primes 10000000000000 10000000000100)
 (search-for-primes 100000000000000 100000000000100)
+
+;1.25
+;She is technically correct, but this solution will computer very large numbers and result in much slower run times
