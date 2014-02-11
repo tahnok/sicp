@@ -423,3 +423,31 @@
 
 ;1.26
 ;The intrerpreter will evalutate (remainder (* (expmod base (/exp 2) m) (expmod base (/ exp 2) m)) m) such that expmod is called twice instead of just once and then doubling the result. But since this is a recursive procedure, we go into tree recursion calling twice the expmod at every level
+
+;1.27
+
+(define (square x) (* x x))
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+	((even? exp)
+	 (remainder (square (expmod base (/ exp 2) m))
+		    m))
+	(else
+	 (remainder (* base (expmod base (- exp 1) m))
+		    m))))
+
+(define (exhaustive-fermat testing base)
+  (cond ((<= testing base) true)
+	((= (expmod base testing testing) base) (exhaustive-fermat testing (+ base 1)))
+	(else false)))
+
+(exhaustive-fermat 32 1) ;f
+(exhaustive-fermat 7 1) ;t (true prime)
+;carmichael numbers
+(exhaustive-fermat 561 1) ;t
+(exhaustive-fermat 1105 1) ;t
+(exhaustive-fermat 1729 1) ;t
+(exhaustive-fermat 2465 1) ;t
+(exhaustive-fermat 2821 1) ;t
+(exhaustive-fermat 6601 1) ;t
