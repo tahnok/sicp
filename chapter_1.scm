@@ -451,3 +451,24 @@
 (exhaustive-fermat 2465 1) ;t
 (exhaustive-fermat 2821 1) ;t
 (exhaustive-fermat 6601 1) ;t
+
+;1.28
+
+(define (square x) (* x x))
+
+(define (expmod base exp m)
+  (define (non-trivial-root? result) (if (= result 1) 0 result))
+  (cond ((= exp 0) 1)
+	((even? exp)
+	 (non-trivial-root? (remainder (square (expmod base (/ exp 2) m))
+		    m)))
+	(else
+	 (remainder (* base (expmod base (- exp 1) m))
+		    m))))
+
+(define (miller-rabin testing)
+  (define (miller-rabin-iter testing count)
+    (cond ((<= (- testing 1) count) true)
+	  ((= (expmod count (- testing 1) testing) 0) (display count))
+	  (else (miller-rabin-iter testing (+ count 1)))))
+  (miller-rabin-iter testing 3))
