@@ -457,14 +457,22 @@
 (define (square x) (* x x))
 
 (define (expmod base exp m)
-  (define (non-trivial-root? result) (if (= result 1) 0 result))
+  (define (non-trivial-root? intermediate)
+    (define (check-result result)
+      (if (and
+	   (not (= intermediate (- m 1)))
+	   (not (= intermediate 1))
+	   (= result))
+	  0
+	  result))
+    (check-result (remainder (square intermediate) m)))
+
   (cond ((= exp 0) 1)
 	((even? exp)
-	 (non-trivial-root? (remainder (square (expmod base (/ exp 2) m))
-		    m)))
+	 (non-trivial-root? (expmod base (/ exp 2) m))
 	(else
 	 (remainder (* base (expmod base (- exp 1) m))
-		    m))))
+		    m)))))
 
 (define (miller-rabin testing)
   (define (miller-rabin-iter testing count)
@@ -472,3 +480,27 @@
 	  ((= (expmod count (- testing 1) testing) 0) (display count))
 	  (else (miller-rabin-iter testing (+ count 1)))))
   (miller-rabin-iter testing 3))
+
+;1.28 --------------------------- take 2
+
+(define (square x) (* x x))
+
+(define (expmod base exp m)
+  (define (check-result result step exp)
+    (if (and (= result 1) (not (= step 1)) (not (= step (- exp 1))))
+	0
+	result
+	))
+  (define (make-step step exp m)
+    (check-result (remainder (square step) m) step exp))
+  (cond ((= exp 0) 1)
+	((even? exp)
+	 (make-step (expmod base (/ exp 2) m) exp m)
+	(else
+	 (remainder (* base (expmod base (- exp 1) m))
+		    m))))
+
+(define (exhaustive-fermat testing base)
+  (cond ((<= testing base) true)
+	((= (expmod base testing testing) base) (exhaustive-fermat testing (+ base 1)))
+	(else false)))
