@@ -504,3 +504,15 @@
   (cond ((<= testing base) true)
 	((= (expmod base testing testing) base) (exhaustive-fermat testing (+ base 1)))
 	(else false)))
+
+;1.29
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+
+(define (simpson-integral f a b n)
+  (define (get-h) (/ (- b a) n))
+  (define (add-dx x) (+ x dx))
+  (* (sum f (+ a (* k (get-h)) add-dx b) dx)) ;;not done
