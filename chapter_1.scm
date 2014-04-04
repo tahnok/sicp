@@ -511,8 +511,20 @@
       0
       (+ (term a)
          (sum term (next a) next b))))
+(define (incr n) (+ 1 n))
 
 (define (simpson-integral f a b n)
   (define (get-h) (/ (- b a) n))
-  (define (add-dx x) (+ x dx))
-  (* (sum f (+ a (* k (get-h)) add-dx b) dx)) ;;not done
+  (define (prefix current)
+    (cond ((= current 0) 1)
+	  ((= current n) 1)
+	  ((even? current) 2)
+	  (else 4)))
+  (define (term x)
+    (* (prefix x) (f (+ a (* x (get-h))))))
+  (*
+   (sum term 0 incr n)
+   (/ (get-h) 3)
+   ))
+
+(simpson-integral cube 0 2 1000)
