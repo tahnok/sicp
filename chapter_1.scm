@@ -528,3 +528,59 @@
    ))
 
 (simpson-integral cube 0 2 1000)
+
+;1.30
+
+(define (sum term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ result (term a))))
+  (iter a 0))
+
+;1.31
+
+;a
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+	 (product term (next a) next b))))
+
+(define (incrc n) (+ n 1))
+(define (ident n) n)
+
+(define (pi count)
+  (define (term n)
+    (if (even? n)
+	(/ n (+ n 1))
+	(/ (+ n 1) n)))
+  (product term 2 incr count))
+
+;b
+
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+	result
+	(iter (next a) (* result (term a)))))
+  (iter a 1))
+
+;1.32
+
+;a
+
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+      null-value
+      (combiner (term a)
+		(accumulate combiner null-value term (next a) next b))))
+
+;b
+
+(define (accumulate combiner null-value term a next b)
+  (define (iter a result)
+    (if (> a b)
+	result
+	(iter (next a) (combiner result (term a)))))
+  (iter a null-value))
