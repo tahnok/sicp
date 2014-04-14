@@ -609,3 +609,7 @@
     (= 1 (gcd x a))
   (accumulate-filter * 1 ident 1 incr a relative-prime?))
 
+;1.34
+
+;it would call (2 2) and fail since you can't call 2
+
