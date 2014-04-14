@@ -584,3 +584,28 @@
 	result
 	(iter (next a) (combiner result (term a)))))
   (iter a null-value))
+
+;1.33
+
+(define (accumulate-filter combiner null-value term a next b filter)
+  (define (iter a result)
+    (if (> a b)
+	result
+	(iter (next a) (if (filter a)
+			   (combiner result (term a))
+			   (result)))))
+  (iter a null-value))
+
+;a
+
+(define (sum-square-prime a b)
+  (define (square x) (* x x))
+  (accumulate-filter + 0 square a incr b prime?))
+
+;b
+
+(define (sum-relative-prime a)
+  (define (relative-prime? x)
+    (= 1 (gcd x a))
+  (accumulate-filter * 1 ident 1 incr a relative-prime?))
+
