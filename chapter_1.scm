@@ -661,3 +661,25 @@
   (fixed-point (lambda (x) (average x (/ (log 1000) (log x)))) 1.1))
 
 ;far fewer iterations for x-to-x-average
+
+;1.37
+
+;a
+
+(define (cont-frac n d k)
+  (define (a count)
+    (if (= k count)
+	(/ (n count) (d count))
+	(/ (n count) (+ (d count) (a (+ count 1))))))
+  (a 1))
+
+(cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)
+
+;b
+
+(define (cont-frac-iter n d k)
+  (define (a count sum)
+    (if (= 0 count)
+	sum
+	(a (- count 1) (/ (n count) (+ (d count) sum)))))
+  (a k 0))
