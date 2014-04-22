@@ -683,3 +683,12 @@
 	sum
 	(a (- count 1) (/ (n count) (+ (d count) sum)))))
   (a k 0))
+
+;1.38
+
+(define (e-approx)
+  (+ 2
+     (cont-frac-iter (lambda (i) 1.0) (lambda (i) (if
+						   (= (remainder (+ i 1) 3) 0)
+						   (* 2 (/ (+ i 1) 3))
+						   1)) 50)))
