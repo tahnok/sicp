@@ -692,3 +692,14 @@
 						   (= (remainder (+ i 1) 3) 0)
 						   (* 2 (/ (+ i 1) 3))
 						   1)) 50)))
+;1.39
+
+(define (tan-cf x k)
+  (cont-frac-iter (lambda (i) (if
+			       (= i 1)
+			       x
+			       (- (* x x))))
+		  (lambda (i) (- (* 2 i) 1))
+		  k))
+
+
