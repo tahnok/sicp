@@ -703,3 +703,19 @@
 		  k))
 
 
+;1.40
+
+(define (cubic a b c)
+  (lambda (x)
+    (+
+     (* x x x)
+     (* a x x)
+     (* b x)
+     c)))
+
+;1.41
+
+(define (double proc)
+  (lambda (x)
+    (proc (proc x))))
+     
