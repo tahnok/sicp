@@ -719,3 +719,27 @@
   (lambda (x)
     (proc (proc x))))
      
+;1.41
+
+(define (combine f g)
+  (lambda (x)
+    (f (g x))))
+
+;1.43
+
+(define (repeated f n)
+  (if
+   (= n 1)
+   f
+   (lambda (x)
+     (f ((repeated f (- n 1)) x)))))
+
+(define (square x) (* x x))
+
+((repeated square 2) 5)
+
+;1.44
+
+(define (smooth f)
+  (lambda (x)
+    (/ (+ (f x) (f (+ x dx)) (f (- x dx))) 3)))
