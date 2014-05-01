@@ -775,3 +775,26 @@
 (define (nth-root n radicand)
   (fixed-point ((repeated average-damp (floor (log2 n))) (lambda (y) (/ n (expt y (- radicand 1))))) 1.0))
 
+;1.46
+
+(define (iterative-improve good-enough? improve)
+  (define (fn x)
+    (let ((xim (improve x)))
+      (if (good-enough? xim x) xim (fn xim))))
+  fn)
+
+(define (sqrt n)
+  (
+   (iterative-improve
+    (lambda (ximm x) (< (abs (- (square ximm) n)) 0.001))
+    (lambda (x) (average x (/ n x))))
+   1.0))
+
+(define (fixed-point f guess)
+  ((iterative-improve
+    (lambda (v1 v2) (< (abs (- v1 v2)) tolerance))
+    f)
+   guess))
+
+
+(define tolerance 0.00001)
