@@ -16,13 +16,15 @@
 
 (define (weigh-branch branch)
   (let ((structure (branch-structure branch)))
-    (if (not (pair? structure))
+    (if (is-mobile? branch)
 	structure
 	(total-weight structure))))
 
 (define (total-weight mobile)
   (+ (weigh-branch (left-branch mobile)) (weigh-branch (right-branch mobile))))
 
+(define (is-mobile? branch)
+  (not (pair? branch-structure)))
 
 (define (balanced? mobile)
   (let ((left (left-branch mobile))
