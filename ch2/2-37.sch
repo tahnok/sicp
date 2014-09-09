@@ -25,3 +25,11 @@
 
 (define (matrix-*-vector m v)
   (map (lambda (row) (dot-product row v)) m))
+
+(define (transp m)
+  (accumulate-n cons '() m))
+
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+    (map (lambda (col)
+	   (matrix-*-vector n col)) m)))
