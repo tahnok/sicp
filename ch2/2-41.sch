@@ -1,4 +1,4 @@
-;given
+;old
 
 (define nil '())
 
@@ -29,9 +29,17 @@
    )
   )
 
+;new
 
-;new prime-sum-pairs
+(define (uniq-triples n)
+  (flatmap
+   (lambda (x)
+     (map
+      (lambda (pair)
+	(append pair x)
+	)
+      (uniq-pair (- n 2))))
+   (enumerate-interval 1 n)))
 
-(define (prime-sum-pairs n)
-  (map make-pair-sum
-       (filter prime-sum? (uniq-pair n))))
+
+  
