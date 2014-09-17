@@ -42,7 +42,13 @@
    (enumerate-interval 3 n)))
 
 (define (matching-triple triple n)
-  (= (map + triple) n))
+  (= (accumulate + 0 triple) n))
+
+(define (uniq-matching-triples n s)
+  (filter
+   (lambda (triple)
+     (matching-triple triple s))
+   (uniq-triples n)))
 
 ; triples for n = 3
 ;(1 2 3)
