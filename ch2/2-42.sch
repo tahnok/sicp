@@ -23,11 +23,43 @@
 	 (lambda (positions) (safe? k positions))
 	 (flatmap
 	  (lambda (rest-of-queens)
-	    (map (lambda (new-row)
-		   (adjoin-position
-		    new-row k rest-of-queens))
-		 (enumerate-interval 1 board-size))
+	    (map
+	     (lambda (new-row) (adjoin-position new-row k rest-of-queens))
+	     (enumerate-interval 1 board-size))
 	    (queen-cols (- k 1)))))))
   (queen-cols board-size))
 
 ;mine
+
+;use lists
+
+(define (empty-board) nil)
+
+(define (safe? k positions)
+  (and
+   (row-safe? k posititions)
+   (up-diagonal-safe? k positions)
+   (down-diagonal-safe? k posititions)
+   ))
+
+(define (row-safe? k positions)
+  (let ((head (car positions))
+	(tail (cdr positions)))
+    (not (accumulate
+     (lambda (x y)
+       (if y
+	   true
+	   (= head x)))
+     false
+     tail))))
+
+(define (up-diagonal-safe? k positions)
+  (define (check positions head 
+  (let ((head (car posistions)))
+    (
+
+
+
+(define (adjoin-position new-row k rest-of-queens)
+p  (append (list new-row) rest-of-queens)
+  )
