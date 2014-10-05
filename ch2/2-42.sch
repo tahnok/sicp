@@ -54,9 +54,14 @@
      tail))))
 
 (define (up-diagonal-safe? k positions)
-  (define (check positions head 
+  (define (check positions k)
+    (cond
+     ((= k 0) true)
+     ((= (car positions) head) false)
+     (else
+      (check (cdr positions (- k 1))))))
   (let ((head (car posistions)))
-    (
+    (check (cdr positions) head)))
 
 
 
