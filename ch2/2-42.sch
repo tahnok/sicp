@@ -54,17 +54,22 @@
      tail))))
 
 (define (up-diagonal-safe? k positions)
-  (define (check positions k)
+  (define (check positions head)
     (cond
-     ((= k 0) true)
-     ((= (car positions) head) false)
+     ((= head (- (car positions) 1)) false)
+     ((= head 0) true)
      (else
-      (check (cdr positions (- k 1))))))
-  (let ((head (car posistions)))
-    (check (cdr positions) head)))
+      (check (cdr positions) (- head 1)))))
+  (check (cdr positions) (car positions)))
 
-
+(define (down-diagonal-safe? k positions)
+  (define (check positions head)
+    (cond
+     ((= head (+ (car positions) 1)) false)
+     ((= head k) true)
+     (else
+      (check (cdr positions) (+ head 1)))))
+  (check (cdr positions) (car positions)))
 
 (define (adjoin-position new-row k rest-of-queens)
-p  (append (list new-row) rest-of-queens)
-  )
+  (append (list new-row) rest-of-queens))
