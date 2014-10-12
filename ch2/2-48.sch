@@ -1,1 +1,6 @@
-(define (make-segment start end))
+(define make-segment cons)
+
+(define start-segment car)
+
+(define end-segment cd)
+
