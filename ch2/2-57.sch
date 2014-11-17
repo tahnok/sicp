@@ -1,6 +1,6 @@
 ;-------------------------- GIVEN
  
-(define (variable? x) (symbol? x)) 
+(define (variable? x) (symbol? x))
 
 (define (same-variable? v1 v2) 
   (and (variable? v1) (variable? v2) (eq? v1 v2))) 
@@ -46,34 +46,35 @@
 	 (error "unknown expression type -- DERIV" exp))))
 
 ;--------------
+;(make-sum 1 2 3 4) -> 10
+;(make-sum 1 x y) -> (+ 1 x y)
+;(make-sum x 1 2) -> (+ x 3) (not sure how to do this yet though)
+;(make-sum 1) -> 1
+;(make-sum x) -> 'x
+;(make-sum (+ x y) z) -> (+ x y z)
+
+
 
 (define (make-sum a1 . a2)
   (cond
    ((null? a2) a1)
-   ((=number? a1 0) (apply make-sum a2)
-   ((and (number? a1) (number? a2)) (+ a1 a2)) 
-   (else (list '+ a1 a2)))))
-
-(define (make-product m1 m2 . m3)
-  (if (pair? m3)
-      (if (> (length m3) 1)
-	  (apply make-product (make-product m1 m2) (car m3) (cdr m3))
-	  (make-product (make-product m1 m2) (car m3)))
-  (cond ((or (=number? m1 0) (=number? m2 0)) 0) 
-	((=number? m1 1) m2) 
-	((=number? m2 1) m1) 
-	((and (number? m1) (number? m2)) (* m1 m2)) 
-	(else (list '* m1 m2)))))
+   ((sum? a1) (append a1 (make-sum a2)))
+   ((=number? a1 0) (apply make-sum a2))
+   ((not (pair? (cdr a2))) ;a2 only has one element
+    (list '+ a1 (car a2)))
+   (else (list a2 'notready))))
 
 (define (sum? x) 
-  (and (pair? x) (eq? (car x) '+))) 
+   (and (pair? x) (eq? (car x) '+)))
 
 (define (addend s) (cadr s)) 
 
 (define (augend s) (make-sum) 
 
+;------------
+(define (make-product m1 m2 . m3)
+
 (define (product? x) 
-  (and (pair? x) (eq? (car x) '*))) 
 
 (define (multiplier p) (cadr p)) 
 
