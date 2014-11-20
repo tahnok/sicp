@@ -61,8 +61,10 @@
    ((sum? a1) (append a1 (make-sum a2)))
    ((=number? a1 0) (apply make-sum a2))
    ((not (pair? (cdr a2))) ;a2 only has one element
-    (list '+ a1 (car a2)))
-   (else (list a2 'notready))))
+    (if (and (number? a1) (number? (car a2)))
+	(+ a1 (car a2))
+	(list '+ a1 (car a2))))
+   (else (apply make-sum (make-sum a1 (car a2)) (cdr a2)))))
 
 (define (sum? x) 
    (and (pair? x) (eq? (car x) '+)))
