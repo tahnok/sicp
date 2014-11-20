@@ -3,10 +3,10 @@
 (define (variable? x) (symbol? x))
 
 (define (same-variable? v1 v2) 
-  (and (variable? v1) (variable? v2) (eq? v1 v2))) 
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
 
 (define (=number? exp num) 
-  (and (number? exp) (= exp num))) 
+  (and (number? exp) (= exp num)))
 
 
 (define (exponentiation? x)
@@ -58,25 +58,39 @@
 (define (make-sum a1 . a2)
   (cond
    ((null? a2) a1)
-   ((sum? a1) (append a1 (make-sum a2)))
+   ((sum? a1) (append a1 (cdr (apply make-sum a2))))
    ((=number? a1 0) (apply make-sum a2))
-   ((not (pair? (cdr a2))) ;a2 only has one element
+   ((not (pair? (cdr a2)))
     (if (and (number? a1) (number? (car a2)))
 	(+ a1 (car a2))
 	(list '+ a1 (car a2))))
    (else (apply make-sum (make-sum a1 (car a2)) (cdr a2)))))
 
+;breaks on (make-sum 2 'x 'y)
+
 (define (sum? x) 
    (and (pair? x) (eq? (car x) '+)))
 
-(define (addend s) (cadr s)) 
+(define (addend s) (cadr s))
 
-(define (augend s) (make-sum) 
+(define (augend s) (apply make-sum (cddr s)))
 
 ;------------
-(define (make-product m1 m2 . m3)
+(define (make-product m1 . m2)
+  (cond
+   ((null? m2) m1)
+   ((product? m1) (append m1 (cdr (apply make-product m2))))
+   ((or (=number? m1 0) (=number? m2 0)) 0)
+   ((=number? m1 1) (apply make-sum m2))
+   ((=number? m2 1) m1)
+   ((not (pair? (cdr m2)))
+    (if (and (number? m1) (number? (car m2)))
+	(* m1 (car m2))
+	(list '* m1 (car m2))))
+   (else (apply make-product (make-product m1 (car m2)) (cdr m2)))))
 
-(define (product? x) 
+(define (product? x)
+   (and (pair? x) (eq? (car x) '*)))
 
 (define (multiplier p) (cadr p)) 
 
