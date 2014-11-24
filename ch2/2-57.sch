@@ -62,7 +62,7 @@
 	(append a1 (cdr (apply make-sum a2)))))
    ((=number? a1 0) (apply make-sum a2))
    ((not (pair? (cdr a2)))
-    (if (and (number? a1) (number? (car a2)))
+    (if (nand (number? a1) (number? (car a2)))
 	(+ a1 (car a2))
 	(list '+ a1 (car a2))))
    (else (apply make-sum (make-sum a1 (car a2)) (cdr a2)))))
@@ -83,18 +83,20 @@
     (if (= (length m2) 1)
 	(append m1 m2)
 	(append m1 (cdr (apply make-product m2)))))
-   ((or (
+   ((or
+     (=number? m1 0)
+     (any (lambda (x) (=number? x 0)) m2))
+    0) ;contains a 0
+   ((=number? m1 1) (apply make-product m2)) ;first element is a 1
    ((not (pair? (cdr m2)))
     (if (and (number? m1) (number? (car m2)))
-	(+ m1 (car m2))
+	(* m1 (car m2))
 	(list '* m1 (car m2))))
    (else (apply make-product (make-product m1 (car m2)) (cdr m2)))))
-
-
 
 (define (product? x)
    (and (pair? x) (eq? (car x) '*)))
 
 (define (multiplier p) (cadr p)) 
 
-(define (multiplicand p) (caddr p)) 
+(define (multiplicand p) (apply make-product (cddr p)))
