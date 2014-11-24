@@ -53,12 +53,13 @@
 ;(make-sum x) -> 'x
 ;(make-sum (+ x y) z) -> (+ x y z)
 
-
-
 (define (make-sum a1 . a2)
   (cond
    ((null? a2) a1)
-   ((sum? a1) (append a1 (cdr (apply make-sum a2))))
+   ((sum? a1)
+    (if (= (length a2) 1)
+	(append a1 a2)
+	(append a1 (cdr (apply make-sum a2)))))
    ((=number? a1 0) (apply make-sum a2))
    ((not (pair? (cdr a2)))
     (if (and (number? a1) (number? (car a2)))
@@ -66,7 +67,6 @@
 	(list '+ a1 (car a2))))
    (else (apply make-sum (make-sum a1 (car a2)) (cdr a2)))))
 
-;breaks on (make-sum 2 'x 'y)
 
 (define (sum? x) 
    (and (pair? x) (eq? (car x) '+)))
@@ -79,15 +79,18 @@
 (define (make-product m1 . m2)
   (cond
    ((null? m2) m1)
-   ((product? m1) (append m1 (cdr (apply make-product m2))))
-   ((or (=number? m1 0) (=number? m2 0)) 0)
-   ((=number? m1 1) (apply make-sum m2))
-   ((=number? m2 1) m1)
+   ((product? m1)
+    (if (= (length m2) 1)
+	(append m1 m2)
+	(append m1 (cdr (apply make-product m2)))))
+   ((or (
    ((not (pair? (cdr m2)))
     (if (and (number? m1) (number? (car m2)))
-	(* m1 (car m2))
+	(+ m1 (car m2))
 	(list '* m1 (car m2))))
    (else (apply make-product (make-product m1 (car m2)) (cdr m2)))))
+
+
 
 (define (product? x)
    (and (pair? x) (eq? (car x) '*)))
