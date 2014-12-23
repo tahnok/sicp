@@ -31,3 +31,7 @@
 					; importantly, this will properly return an unchanged list of elements if the passed in list has less than n elements
 
 ;order of growth:
+
+					;b
+
+;the run time will be n since the list is split in 2 and each recurse will ultimately take o(1) n times.
