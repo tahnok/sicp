@@ -52,23 +52,6 @@
 	(else (cons (car set)
 		    (adjoin-set x (cdr set))))))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 (define sample-tree
   (make-code-tree (make-leaf 'A 4)
 		  (make-code-tree
