@@ -18,6 +18,14 @@
 
 
 (define (install-deriv-sums)
-
-					;stuff
-  )
+  (define (addend exp)
+    (cadr exp))
+  (define (augend exp)
+    (caddr exp))
+  (define (make-sum exp1 exp2)
+    (list '+ exp1 exp2))
+  (define (deriv-sum args var)
+    (make-sum (deriv (addend exp) var)
+	      (deriv (augend exp) var)))
+    
+  (put 'deriv '(+) deriv-sum))
