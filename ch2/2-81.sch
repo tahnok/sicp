@@ -1,5 +1,5 @@
 (define (apply-generic op .args)
-  (let ((type-tags (map type-targ args)))
+  (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
 	  (apply proc (map contents args))
@@ -17,6 +17,6 @@
 			     (apply-generic op a1 (t2->t1 2)))
 			    (else (error "No method for these types"
 					 (list op type-tags)))))
-		(error "Can't coerce types if they are the same")))
+		    (error "Can't coerce types if they are the same")))
 	      (error "No method for these types"
 		     (list op type-tags)))))))
