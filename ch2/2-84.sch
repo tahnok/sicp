@@ -11,13 +11,19 @@
 		(if (not (= type1 type2))
 					;code for raising here
 		    (cond
-		     ((can-be-raised type1 type2) (apply-generic op (apply-generic 'raise a1) a2))
-		     ((can-be-raised type2 type1) (apply-generic op a1 (apply-generic 'raise a2)))
+		     ((can-be-raised type1 a1 type2) (apply-generic op (apply-generic 'raise a1) a2))
+		     ((can-be-raised type2 a2 type1) (apply-generic op a1 (apply-generic 'raise a2)))
 		     (else
 		      (error "No common type for types" type-tags)))
 		    (error "Can't coerce types if they are the same")))
 	      (error "No method for these types"
 		     (list op type-tags)))))))
 
-(define (can-be-raised lower higher)
-  ????????????)
+(define (can-be-raised lower-type element higher)
+  (let ((proc (get 'raise lower)))
+    (if proc
+	(let ((raised (proc lower element)))
+	  (if (= higher (type-tag raised))
+	    #t
+	    (can-be-raised (type-tag raised) raised higher)))
+	#f)))
