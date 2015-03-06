@@ -10,7 +10,7 @@
 	 (and (= (numer x) (numer y)) (= (denom x) (denom y))))))
 
 (define (install-complex-package)
-  (put 'equ? '(rational rational)
+  (put 'equ? '(complex complex)
        (lambda (x y)
 	 (and (= (real-part x) (real-part y))
 	      (= (imag-part x) (image-part y))))))
