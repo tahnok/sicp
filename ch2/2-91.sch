@@ -8,7 +8,13 @@
 	    (let ((new-c (div (coeff t1) (coeff t2)))
 		  (new-o (- (order t1) (order t2))))
 	      (let ((rest-of-result
-					;recursion
+		     (div-terms
+		      (add-terms L1
+				 (negate-terms
+				  (mul-term-by-all-terms
+				   (make-term new-c new-o)
+				   L2))
+				 ))
 		     ))
-					;form complete result
-		))))))
+		(list (adjoin-term (make-term new-c new-o) (car rest-of-result))
+		      (cdr rest-of-results))))))))
