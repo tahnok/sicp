@@ -1,3 +1,3 @@
-(define (make-monitor f)
-  (lambda (. args)
-    (display params)))
+(define make-monitor
+  (lambda (arg . args )
+    (display '(arg args))))
