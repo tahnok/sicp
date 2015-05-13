@@ -1,17 +1,20 @@
-(define (rand-old (let ((x random-init))
-		(lambda ()
-		  (set! x (rand-update x))
-		  x))))
+(define (random-init)
+  4)
 
 (define (rand message)
-
-  (define (dispatch)
-    (cond
-     ((= message 'generate)
-      (rand-generate))
-     ((= message 'reset)
-      (lambda (x)
-	(set! poop x)))
-     (else
-      (error "pew"))))
-  (dispatch message))
+  (let ((x random-init))
+    (define (generate)
+      (lambda ()
+	(set! x (rand-update x))
+	x))
+    (define (reset val)
+      (set! x val))
+    (define (dispatch message)
+      (cond
+       ((eq? message 'generate)
+	(generate))
+       ((eq? message 'reset)
+	reset)
+       (else
+	(error "pew"))))
+    (dispatch message)))

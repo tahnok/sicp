@@ -20,8 +20,11 @@
 
 (define (estimate-integral predicate x1 x2 y1 y2 trials)
   (* (monte-carlo trials
-                  (lambda
+                  (lambda ()
                       (predicate
                        (random-in-range x1 x2)
                        (random-in-range y1 y2))))
-     (area-of-reactangle x1 x2 y1 2)))
+     (area-of-rectangle x1 x2 y1 y2)))
+
+(define (predicate x y)
+  (<= (+ (expt (- x 5) 2) (expt (- y 7) 2)) 9))
