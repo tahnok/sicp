@@ -4,11 +4,11 @@
 (define (rand message)
   (let ((x random-init))
     (define (generate)
-      (lambda ()
+      (begin
 	(set! x (rand-update x))
 	x))
     (define (reset val)
-      (set! x val))
+	(set! x val))
     (define (dispatch message)
       (cond
        ((eq? message 'generate)
