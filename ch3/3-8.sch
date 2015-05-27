@@ -3,5 +3,8 @@
 (define z -1)
 
 (define (f input)
-  (if (= z -1)
-      (set!
+  (begin
+    (if (= z -1)
+	(set! z input))
+    )
+  (* z input))
