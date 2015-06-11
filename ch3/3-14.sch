@@ -7,4 +7,5 @@
 	  (loop temp x))))
   (loop x '()))
 
-;; this reverses the list in place?
+;; this destructively reverses the list, return x backwards, and leaving x set to just the last element
+;; note: the returned list still points to x, so changes to x will be reflected in the newly returned list

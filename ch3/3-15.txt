@@ -1,0 +1,5 @@
+This is just draw a box and pointer diagram, so Imma skip it.
+
+Basically, z1 has both cons cells pointing to the same structure, so changing "just" cdr results in a change to car
+
+z2 does not behave this way since car and cdr point to different things
