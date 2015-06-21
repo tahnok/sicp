@@ -3,6 +3,10 @@
     (define (inner suspect)
       (cond
        ((and (pair? suspect) (memq seen (cdr suspect)))
-	false)
+	true)
+       ((not (pair? suspect)) false)
        (else
-	  (
+	(begin
+	  (set! seen (cons seen suspect))
+	  (contains-loop? (cdr suspect))))))
+    (inner suspect)))
