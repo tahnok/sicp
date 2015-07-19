@@ -43,9 +43,36 @@
 
 (define (front-insert-deque! deque data)
   (if (empty-deque? deque)
-      (;let this be a new deque-item
-      (cons
-  )
+      ((let (new-item (cons data (cons '() '()))))
+       (cons new-item new-item))
+      ((let (new-item (cons data (cons '() (front-deque deque)))))
+       (begin
+	 (set-left! (front-deque deque) new-item)
+	 (cons new-item (rear-deque deque))))))
 
-(define (rear-insert-deque! deque item)
-)
+
+(define (rear-insert-deque! deque data)
+  (if (empty-deque? deque)
+      ((let (new-item (cons data (cons '() '()))))
+       (cons new-item new-item))
+      ((let (new-item (cons data (cons (rear-deque deque) '()))))
+       (begin
+	 (set-right! (rear-deque deque) new-item)
+	 (cons (front-deque deque) new-item)))))
+
+(define (front-delete-deque! deque)
+  (if (empty-deque? (right-pointer (front-deque deque)))
+      (make-deque)
+      ((let (new-front (right-pointer (front-deque deque))))
+       (begin
+	 (set-left! new-front '())
+	 (cons new-front (rear-deque deque))))))
+
+(define (rear-delete-deque! deque)
+  (if (empty-deque (left-pointer (rear-deque deque)))
+      (make-deque)
+      (let ((new-rear (left-pointer (rear-deque deque))))
+	(begin
+	  (set-right! new-rear '())
+	  (cons (front-deque deque) new-rear)))))
+	
