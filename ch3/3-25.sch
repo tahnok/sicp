@@ -5,6 +5,7 @@
 	 (> (length maybe-table) 0)
 	 (eq? '*table* (car maybe-table))))
 
+		 
   (define (lookup keys sub-table)
     (let ((record
 	   (contains (car keys) (cdr sub-table))))
@@ -25,22 +26,25 @@
 		  (insert! (cdr keys) value (cdr record))
 		  (let ((new-table (list '*table*)))
 		    (insert! (cdr keys) value new-table)
-		    (set-cdr! sub-table (cons
-					 (cons (car keys) new-table)
-					 (cdr sub table))))))
+		    (set-cdr! sub-table
+			      (cons
+			       (cons (car keys) new-table)
+			       (cdr sub-table))))))
 	  (if (eq? '() (cdr keys))
 	      (set-cdr! sub-table
-			(cons (cons keys value)
+			(cons (cons (car keys) value)
 			      (cdr sub-table)))
-	      (set-cdr! sub-table
-			(cons (cons (car keys)
-				    (insert! (cdr keys) value (list '*table*)))
-			      (cdr sub-table))))))
-    
-    'ok)
+	      (let ((new-table (list '*table*)))
+		(insert! (cdr keys) value new-table)
+		(set-cdr! sub-table
+			  (cons
+			   (cons (car keys) new-table)
+			   (cdr sub-table))))))
+    'ok))
   (let ((local-table (list '*table*)))
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) (lambda (keys) (lookup keys local-table)))
 	    ((eq? m 'insert-proc!) (lambda (keys value) (insert! keys value local-table)))
+	    ((eq? m 'debug) local-table)
 	    (else (error "unknown operation: TABLE" m))))
     dispatch))
