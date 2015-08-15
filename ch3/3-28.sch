@@ -1,4 +1,4 @@
-(define (or-gate o1 o2 outout)
+(define (or-gate o1 o2 output)
   (define (or-gate-procedure)
     ((let (new-value
 	   (logical-or (get-signal o1) (get-signal o2))))
