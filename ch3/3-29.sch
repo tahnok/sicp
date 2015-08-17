@@ -3,11 +3,11 @@
 	(no1 (make-wire))
 	(no2 (make-wire))
 	(andout (make-wire)))
-    (let (
-	  (not1 ((inverter o1 no1)))
-	  (not2 ((inverter o2 no2)))
-	  (and1 ((and-gate not1 not2 andout)))
-	  (not3 ((inverter andout output))))
-  (define (or-gate-procedure)
-    ((let
-	 (new-value (get-signal
+    (inverter o1 no1)
+    (inverter o2 no2)
+    (and-gate not1 not2 andout)
+    (inverter andout output)
+    'ok))
+
+;;; delay is and-gate-delay + 2 inverter-gate-delay because the first 2 inverters happen at the same time
+
