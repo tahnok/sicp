@@ -6,3 +6,5 @@
 	  (full-adder (car a-wires) (car b-wires) previous-carry (car s-wires) new-carry)
 	  (ripple (cdr a-wires) (cdr b-wires) (cdr s-wires) new-carry))))
   (ripple a-list b-list s-list (new-wire)))
+
+;; delay is n * full-adder delay
