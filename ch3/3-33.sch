@@ -1,3 +1,15 @@
+;;; my code
+
+(define (averager a b c)
+  (let ((add-to-mul (make-connector))
+	(half (make-connector))
+	)
+    (adder a b add-to-mul)
+    (multiplier add-to-mul half c)
+    (constant 0.5 half))
+  'ok)
+    
+
 ;;; included code
 
 (define (for-each-except exception procedure list)
