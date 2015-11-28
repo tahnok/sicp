@@ -21,5 +21,9 @@
     (pairs (stream-cdr s) (stream-cdr t)))))
 
 ;; 195 pairs preceed (1, 95). The (1, N) elemen is found at position ((N - 1) * 2) - 1 (or 2N - 3)
-;; (99, 100) will be after ... the pattern is (N, N+1) is at (3 * N) + last one (3 * 2^N) - 1
-;; see 1, 4, 10, 22, 46 or maybe 2, 5, 11, 23, 47
+;; (99, 100) will after (3 * 2^(N -1 )) - 2 numbers if in the format (N, N -1) (too large to calculate)
+;; (100, 100) (or (N,N) occurs ever 2^N - 2 pairs (too large to calculate)
+
+;;0, 2, 6, 14, 
+;;11 22, 33, 44
+;; (2^N) - 2
