@@ -1,24 +1,37 @@
+;; not mine
+
+(define (integers-starting-from n)
+  (cons-stream n (integers-starting-from (+ n 1))))
+
+(define integers
+  (integers-starting-from 1))
+
+;; mine
+
 (define (merge-weighted s t weight-fn)
   (cond ((stream-null? s) t)
 	((stream-null? t) s)
 	(else
-	 (let ((scar (stream-car s))
-	       (tcar (stream-car t)))
-	   (let ((sweight (weight-fn scar))
-		 (tweight (weight-fn tcar)))
-	     (cond ((< sweight tweight)
+	 (let ((s1car (stream-car s1))
+	       (s2car (stream-car s2)))
+	   (let ((s1weight (weight-fn s1car))
+		 (s2weight (weight-fn s2car)))
+	     (cond ((< s1weight s2weight)
 		    (cons-stream
-		     scar
-		     (merge (stream-cdr s) t)))
-		   ((> sweight tweight)
+		     s1car
+		     (merge-weighted (stream-cdr s1) s2 weight-fn)))
+		   ((> s1weight s2weight)
 		    (cons-stream
-		     tcar
-		     (merge s (stream-cdr t))))
+		     s2car
+		     (merge-weighted s1 (stream-cdr s2) weight-fn)))
 		   (else
 		    (cons-stream
-		     scar
-		     (merge (stream-cdr s)
-			    (stream-cdr t))))))))))
+		     s1car
+		     (merge-weighted
+		      (stream-cdr s1)
+		      (stream-cdr s2)
+		      weight-fn)))))))))
+
 
 (define (weighted-pairs s t weight-fn)
   (cons-stream
@@ -38,7 +51,12 @@
 		  integers
 		  (lambda (pair)
 		    (+ (expt (car pair) 3)
-		       (expt (cdr pair) 3)))))
+		       (expt (cadr pair) 3)))))
 
-(define (repeated-pairs stream)
-  (
+(define (repeated-pairs stream comparator)
+  (if (= (comparator (stream-car stream))
+	 (comparator (stream-car (stream-cdr stream))))
+      (cons-stream
+       (cons (stream-car stream) (stream-car (stream-cdr stream)))
+       (repeated-pairs (stream-cdr stream) comparator))
+      (repeated-pairs (stream-cdr stream) comparator)))
