@@ -17,4 +17,15 @@
 
 (define (RC R C dt)
   ;;todo
-  )
+  (define (proc initial-volts current-stream)
+    (cons-stream
+     initial-volts
+     (add-streams
+      (scale-stream current-stream R)
+      (integral
+       (scale-stream
+	current-stream
+	(/ 1 C))
+	initial-volts
+	dt))))
+  proc)
