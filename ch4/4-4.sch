@@ -1,6 +1,6 @@
 (define (and? exp) (tagged-list? exp 'and))
 
-(define (and-clauses exp) (cd exp))
+(define (and-clauses exp) (cdr exp))
 
 (define (no-clauses? clauses) (null? exp))
 
@@ -18,3 +18,35 @@
 		  result
 		  (eval-and (rest-clauses clauses) env))
 	      false)))))
+
+(define (or? exp) (tagged-list? exp 'or))
+
+(define (or-clauses exp) (cdr exp))
+
+(define (eval-or exp env)
+  (let ((clauses (or-clauses exp)))
+    (if (no-clauses? clauses)
+	false
+	(let ((result (eval (first-clause clauses) env)))
+	  (if result
+	      result
+	      (if (no-clauses (rest-clauses clauses))
+		  false
+		  (eval-or (rest-clauses clauses) env)))))))
+
+;; as derive exp
+
+(define (and->if exp)
+  (foo (and-clauses exp)))
+
+(define (foo clauses)
+  (if (null? clauses)
+      true
+      (let ((first car clauses)
+	    (rest (cdr clauses)))
+	(if (null? rest)
+	    (eval first)
+	    (make-if first
+		     first
+		     (foo rest))))))
+		     
