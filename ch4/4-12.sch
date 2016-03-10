@@ -27,3 +27,36 @@
 	  (scan (frame-variables frame)
 		(frame-values frame)))))
   (env-loop env))
+
+(define (define-variable! var val env)
+  (let ((frame (first-frame env)))
+    (define (scan (vars vals))
+      (cond ((null? vars)
+	     (add-binding-to-frame! var val frame))
+	    ((eq? var (car vars)) (set-car! vals val))
+	    (else (scan (cdr vars) (cdr vals)))))
+    (scan (frame-variables frame) (frame-values frame))))
+
+
+;; candidates for abstraction
+;; env-loop, scan, update-frame, search frame,
+
+(define (scan-builder null-proc eq-proc var)
+  (define (scan vars vals)
+    (cond ((null? vars)
+	   (null-proc))
+	  ((eq? var (cdr vars))
+	   (eq-proc vals))
+	  (else (scan (cdr vars) (cdr vals)))))
+  scan)
+	   
+(define (env-loop-builder scan)
+  (define (env-loop env)
+    (if (eq? env the-empty-environment)
+	(error "Empty env!" env)
+	(let ((frame (first-frame env)))
+	  (scan (frame-variables frame)
+		(frame-values frame)))))
+  env-loop)
+
+	      
