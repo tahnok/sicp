@@ -30,35 +30,19 @@
   (env-loop env))
 
 (define (set-variable-value! var val env)
-  (define (scan (scan-builder (lambda () (env-loop (enclosing-environment env))
-
-(define (set-variable-value! var val env)
-  (define (env-loop env)
-    (define (scan vars vals)
-      (cond ((null? vars)
-	     (env-loop (encolosing-environment env))
-	     ((eq? var (car vars))
-	      (set-car! vals val))
-	     (else (scan (cdr vars) (cdr vals))))))
-    (if (eq? env the-empty-environment)
-	(error "Unbound variable -- SET!" var)
-	(let ((frame (first-frame env)))
-	  (scan (frame-variables frame)
-		(frame-values frame)))))
+  (define scan (scan-builder (lambda () (env-loop (enclosing-environment env)))
+			      (lambda (vals) (set-car! vals val))
+			      var))
+  (define env-loop (env-loop-builder scan))
   (env-loop env))
 
 (define (define-variable! var val env)
   (let ((frame (first-frame env)))
-    (define (scan (vars vals))
-      (cond ((null? vars)
-	     (add-binding-to-frame! var val frame))
-	    ((eq? var (car vars)) (set-car! vals val))
-	    (else (scan (cdr vars) (cdr vals)))))
-    (scan (frame-variables frame) (frame-values frame))))
-
-
-;; candidates for abstraction
-;; env-loop, scan, update-frame, search frame,
+    ((scan-builder (lambda () (add-binding-to-frame! var val frame))
+		   (lambda (vals) (set-car! vals val))
+		   var)
+     (frame-variables frame)
+     (frame-values frame))))
 
 (define (scan-builder null-proc eq-proc var)
   (define (scan vars vals)
