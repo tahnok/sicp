@@ -22,5 +22,19 @@
 	  (frame-values frame))))
 
 (define (remove-binding-from-frame! var frame)
-  ;; ??
-  )
+  (define (scan vars vals)
+    (if (eq? (cadr vars) var)
+	(begin
+	  (set-cdr! vars (cddr vars))
+	  (set-cdr! vals (cddr vals)))
+	(scan (cdr vars) (cdr vals))))
+  (let ((vars (frame-variables frame))
+	(vals (frame-values frame)))
+    (if (eq? (car vars) var)
+	(begin
+	  (set-car! vars (cadr vars))
+	  (set-cdr! vars (cddr vars))
+	  (set-car! vals (cadr vals))
+	  (set-cdr! vals (cddr vals)))
+	(scan vars vals))))
+;;TODO: make work with frame with only one var/val pair
