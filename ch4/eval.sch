@@ -2,7 +2,7 @@
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
-	((variable? exp) (lookup-variale-value exp env))
+	((variable? exp) (lookup-variable-value exp env))
 	((quoted? exp) (text-of-quotation exp))
 	((assignment? exp) (eval-assignment exp env))
 	((definition? exp) (eval-definition exp env))
@@ -22,7 +22,7 @@
 
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
-	 (apply-primative-procedure procedure arguments))
+	 (apply-primitive-procedure procedure arguments))
 	((compound-procedure? procedure)
 	 (eval-sequence
 	  (procedure-body procedure)
@@ -37,7 +37,7 @@
 (define (list-of-values exps env)
   (if (no-operands? exps)
       '()
-      (cons (eval (first-operand exps env))
+      (cons (eval (first-operand exps) env)
 	    (list-of-values (rest-operands exps) env))))
 
 (define (eval-if exp env)
@@ -113,7 +113,7 @@
 (define (make-lambda parameters body)
   (cons 'lambda (cons parameters body)))
 
-(define (if? exp) (tagged-list exp 'if))
+(define (if? exp) (tagged-list? exp 'if))
 
 (define (if-predicate exp) (cadr exp))
 
@@ -127,7 +127,7 @@
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
-(define (begin? exp (tagged-list? exp 'begin)))
+(define (begin? exp) (tagged-list? exp 'begin))
 
 (define (begin-actions exp) (cdr exp))
 
@@ -152,7 +152,7 @@
 
 (define (no-operands? ops) (null? ops))
 
-(define (first-operands ops) (car ops))
+(define (first-operand ops) (car ops))
 
 (define (rest-operands ops) (cdr ops))
 
@@ -241,7 +241,27 @@
 		(body args))
    (bodies (defintions args))))
 
-;; CONTINUE HERE
+;; EVALUATOR DATA STRUCTURES
+
+(define (true? x)
+  (not (eq? x false)))
+
+(define (false? x)
+  (eq? x false))
+
+(define (make-procedure parameters body env)
+  (list 'procedure parameters body env))
+
+(define (compound-procedure? p)
+  (tagged-list? p 'procedure))
+
+(define (procedure-parameters p) (cadr p))
+
+(define (procedure-body p) (caddr p))
+
+(define (procedure-environment p) (cadddr))
+
+
 
 ;;VARIABLES AND ENVIRONMENTS
 
@@ -324,11 +344,13 @@
 
 (define (primitive-implementation proc) (cadr proc))
 
+(define null '())
+
 (define primitive-procedures
   (list (list 'car car)
 	(list 'cdr cdr)
 	(list 'cons cons)
-	(list 'null? null)
+	(list 'null null)
 	;;need more
 	))
 
@@ -365,7 +387,7 @@
   (newline) (display string) (newline))
 
 (define (user-print object)
-  (if (compount-procedure? object)
+  (if (compound-procedure? object)
       (display (list 'compound-procedure
 		     (procedure-parameters object)
 		     (procedure-body object)
