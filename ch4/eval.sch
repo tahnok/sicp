@@ -13,7 +13,7 @@
 			 env))
 	((begin? exp)
 	 (eval-sequence (begin-actions exp) env))
-	((cond? exp) (eval (cond-if exp) env))
+	((cond? exp) (eval (cond->if exp) env))
 	((application? exp)
 	 (apply (eval (operator exp) env)
 		(list-of-values (operands exp) env)))
@@ -26,7 +26,7 @@
 	((compound-procedure? procedure)
 	 (eval-sequence
 	  (procedure-body procedure)
-	  (extende-environment
+	  (extend-environment
 	   (procedure-parameters procedure)
 	   arguments
 	   (procedure-environment procedure))))
@@ -53,14 +53,15 @@
 	      (eval-sequence (rest-exps exps) env))))
 
 (define (eval-assignment exp env)
-  (set-varable-value! (assignment-variable exp)
+  (set-variable-value! (assignment-variable exp)
 		      (eval (assignment-value exp) env)
 		      env)
   'ok)
 
-(define (eval-defintion exp env)
-  (define-variable! (definition-variable exp)
-    (define-eval (definition-value exp) env)
+(define (eval-definition exp env)
+  (define-variable!
+    (definition-variable exp)
+    (eval (definition-value exp) env)
     env)
   'ok)
 
@@ -131,15 +132,15 @@
 
 (define (begin-actions exp) (cdr exp))
 
-(define (last-exp? seq) (null? cdr seq))
+(define (last-exp? seq) (null? (cdr seq)))
 
 (define (first-exp seq) (car seq))
 
 (define (rest-exps seq) (cdr seq))
 
 (define (sequence->exp seq)
-  (conf ((null? seq) seq)
-	((last-exp seq) (first-exp seq))
+  (cond ((null? seq) seq)
+	((last-exp? seq) (first-exp seq))
 	(else (make-begin seq))))
 
 (define (make-begin seq) (cons 'begin seq))
@@ -184,7 +185,7 @@
 		      clauses))
 	    (make-if (cond-predicate first)
 		     (sequence->exp (cond-actions first))
-		     (expand-clauses ret))))))
+		     (expand-clauses rest))))))
 
 ;;; my code
 
@@ -259,7 +260,7 @@
 
 (define (procedure-body p) (caddr p))
 
-(define (procedure-environment p) (cadddr))
+(define (procedure-environment p) (cadddr p))
 
 
 
