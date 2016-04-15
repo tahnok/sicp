@@ -1,5 +1,3 @@
-(define apply-in-underlying-scheme apply)
-
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
 	((variable? exp) (lookup-variable-value exp env))
@@ -7,18 +5,19 @@
 	((assignment? exp) (eval-assignment exp env))
 	((definition? exp) (eval-definition exp env))
 	((if? exp) (eval-if exp env))
-	((lambda? exp)
-	 (make-procedure (lambda-parameters exp)
-			 (lambda-body exp)
-			 env))
-	((begin? exp)
-	 (eval-sequence (begin-actions exp) env))
+	((lambda? exp) (make-procedure (lambda-parameters exp)
+				       (lambda-body exp)
+				       env))
+	((begin? exp) (eval-sequence (begin-actions exp) env))
 	((cond? exp) (eval (cond->if exp) env))
-	((application? exp)
-	 (apply (eval (operator exp) env)
-		(list-of-values (operands exp) env)))
+	((and? exp) (eval-and exp env))
+	((or? exp) (eval-or exp env))
+	((application? exp) (apply (eval (operator exp) env)
+				   (list-of-values (operands exp) env)))
 	(else
 	 (error "Unknown expression type -- EVAL" exp))))
+
+(define apply-in-underlying-scheme apply)
 
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
@@ -206,7 +205,7 @@
 	true
 	(let ((result (eval (first-clause clauses) env)))
 	  (if result
-	      (if (no-clauses (rest-clauses clauses))
+	      (if (no-clauses? (rest-clauses clauses))
 		  result
 		  (eval-and (rest-clauses clauses) env))
 	      false)))))
