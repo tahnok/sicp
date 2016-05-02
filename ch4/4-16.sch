@@ -20,4 +20,15 @@
 ;; b
 
 (define (scan-out-defines proc-body)
-  ;;todo
+  (let ((extractions (extract proc-body '() '())))
+    (
+  )
+
+(define (extract sequence defintions rest)
+  (if (null? sequence)
+      (cons defintions rest)
+      (let ((exp (car sequence))
+	    (rest (cdr sequence)))
+	(if (defintion? exp)
+	    (extract rest (append defitions (list exp)) rest)
+	    (extract rest defintions (append rest (list exp)))))))
