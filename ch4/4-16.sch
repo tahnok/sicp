@@ -45,4 +45,4 @@
 		     (list 'set! (definition-variable definition) (definition-body definition)))))
 	
 ;; c
-;; should install in procedure body, otherwise
+;; should install in make-procedure so that it's called when the procedure is built, not when it is examine or retreived
